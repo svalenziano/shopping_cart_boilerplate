@@ -8,19 +8,19 @@ interface ProductProps extends ProductType {
 }
 
 function Product({
-  name,
+  title,
   price,
-  inStock,
+  quantity,
   addToCartButton,
   editButton,
 }: ProductProps) {
   return (
-    <div>
-      <h3>{name}</h3>
+    <div className="m-4 border-2 p-2 rounded-md">
+      <h3>{title}</h3>
       <p>{`${price}`}</p>
-      <p>{`${inStock} left in stock`}</p>
+      <p>{`${quantity} left in stock`}</p>
       <Button onClick={addToCartButton}>Add to Cart</Button>
-      <Button onClick={editButton}>Edit</Button>
+      <Button onClick={editButton} variant="secondary">Edit</Button>
     </div>
   )
 }

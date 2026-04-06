@@ -1,6 +1,6 @@
 export interface ProductType {
-  id: number;
-  name: string;
-  price: number;
-  inStock: number;
+  id: number
+  title: string
+  price: number
+  quantity: number
 }

@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button"
-// import Product from "./features/Product"
+import Cart from "./features/Cart";
 import ProductList from "./features/ProductList";
-import { MockPropertyContext } from "node:test";
 
 const MOCK_PRODUCTS = [
   {
@@ -33,7 +31,8 @@ const MOCK_PRODUCTS = [
 export function App() {
   return (
     <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
+      <div className="flex max-w-2xl min-w-sm flex-col gap-4 text-sm leading-loose">
+        <Cart products={MOCK_PRODUCTS} />
         <ProductList products={MOCK_PRODUCTS} />
       </div>
     </div>
