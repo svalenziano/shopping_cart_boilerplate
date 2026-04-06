@@ -1,3 +1,4 @@
+import { Flower } from "lucide-react";
 import Cart from "./features/Cart";
 import ProductList from "./features/ProductList";
 
@@ -28,10 +29,21 @@ const MOCK_PRODUCTS = [
   },
 ];
 
+function Logo() {
+  return (
+    <div className="flex justify-start h-60 p-10">
+      <Flower className="w-full h-full"/>
+      <h1 className="text-4xl">flower shop</h1>
+    </div>
+  )
+}
+
 export function App() {
   return (
     <div className="flex min-h-svh p-6">
-      <div className="flex max-w-2xl min-w-sm flex-col gap-4 text-sm leading-loose">
+      
+      <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
+        <Logo />
         <Cart products={MOCK_PRODUCTS} />
         <ProductList products={MOCK_PRODUCTS} />
       </div>
