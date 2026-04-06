@@ -9,6 +9,7 @@ const app = express();
 
 const port = process.env.PORT || 5001;
 
+console.log("Connecting to MongoDB Atlas -> ", process.env.DB);
 mongoose
   .connect(process.env.DB, {
     useNewUrlParser: true,
@@ -19,6 +20,7 @@ mongoose
   .catch((err) => console.log(err));
 
 mongoose.Promise = global.Promise;
+console.log("Done connecting / attempting to connect to MongoDB Atlas");
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
