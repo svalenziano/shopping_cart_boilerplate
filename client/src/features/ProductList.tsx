@@ -1,4 +1,4 @@
-import Product from "@/features/Product"
+import Product from "@/features/EditableProduct"
 import type { ProductType } from "@/types"
 import { AddProductForm } from "./AddProductForm"
 import type { MouseEventHandler } from "react"
