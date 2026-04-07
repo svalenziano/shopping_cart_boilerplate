@@ -1,6 +1,6 @@
 import Product from "@/features/EditableProduct"
 import type { ProductType } from "@/types"
-import { AddProductForm } from "./AddProductForm"
+import { AddProductForm, ToggleableAddProductForm } from "./AddProductForm"
 import type { MouseEventHandler } from "react"
 
 interface ProductListProps {
@@ -28,7 +28,7 @@ function ProductList({ products }: ProductListProps) {
           )
         })}
       </ul>
-      <AddProductForm />
+      <ToggleableAddProductForm />
     </div>
   )
 }
