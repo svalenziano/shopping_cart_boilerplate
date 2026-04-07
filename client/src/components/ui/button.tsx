@@ -19,8 +19,8 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
-        emphasis:
-          "bg-emphasis/10 text-emphasis hover:bg-emphasis/20 focus-visible:border-emphasis/40 focus-visible:ring-emphasis/20 dark:bg-emphasis/20 dark:hover:bg-emphasis/30 dark:focus-visible:ring-emphasis/40",
+        confirm:
+          "bg-confirm/80 text-primary hover:bg-confirm/20 focus-visible:border-confirm/40 focus-visible:ring-confirm/20 dark:bg-confirm/20 dark:hover:bg-confirm/30 dark:focus-visible:ring-confirm/40",
       },
       size: {
         default:

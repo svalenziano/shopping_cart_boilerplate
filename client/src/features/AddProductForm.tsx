@@ -69,7 +69,7 @@ export function AddProductForm({
       <TextField label={"Price"} placeholder="42.99" defaultValue={product && product.price} />
       <TextField label={"Quantity"} placeholder="42" defaultValue={product && product.quantity} />
 
-      <Button variant="emphasis" onClick={editAddButton}>{product ? "Edit" : "Add"}</Button>
+      <Button variant="confirm" onClick={editAddButton}>{product ? "Edit" : "Add"}</Button>
       <Button variant="secondary" onClick={cancelButton}>
         Cancel
       </Button>
