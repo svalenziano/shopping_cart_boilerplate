@@ -23,6 +23,7 @@ import {
   type ComponentProps,
   type MouseEventHandler,
 } from "react"
+import type { ProductType } from "@/types"
 
 export function ToggleableAddProductForm() {
   const [visible, setVisible] = useState(false)
@@ -34,15 +35,17 @@ export function ToggleableAddProductForm() {
   }
 
   if (visible) {
-    return <AddProductForm toggleForm={toggleForm} />
+    return <AddProductForm editAddButton={() => {console.log("not implemented")}} cancelButton={toggleForm} />
   }
   return <Button onClick={toggleForm}>Add A Product</Button>
 }
 
 type AddProductFormProps = {
-  product_id?: Number
-  toggleForm: MouseEventHandler
+  product?: ProductType;
+  editAddButton: MouseEventHandler;
+  cancelButton: MouseEventHandler;
 }
+
 
 /**
   Srdjan: 
@@ -50,22 +53,24 @@ type AddProductFormProps = {
     component so that the form is more reusable
  */
 export function AddProductForm({
-  product_id,
-  toggleForm,
+  product,
+  editAddButton,
+  cancelButton,
 }: AddProductFormProps) {
   return (
     <form>
-      {product_id === undefined ? (
+      {product === undefined ? (
         <h3>Add a new product</h3>
       ) : (
-        <h3>Edit product id {String(product_id)}</h3>
+        <h3>Edit product</h3>
       )}
-      <TextField label={"Product Name"} placeholder="New name" />
-      <TextField label={"Price"} placeholder="42.99" />
-      <TextField label={"Quantity"} placeholder="42" />
+      {product ? <TextField label={"ID"} defaultValue={product && product.id} disabled={true}/> : null}
+      <TextField label={"Product Name"} placeholder="New name" defaultValue={product && product.title} />
+      <TextField label={"Price"} placeholder="42.99" defaultValue={product && product.price} />
+      <TextField label={"Quantity"} placeholder="42" defaultValue={product && product.quantity} />
 
-      <Button onClick={(ev) => toggleForm(ev)}>Add</Button>
-      <Button variant="secondary" onClick={(ev) => toggleForm(ev)}>
+      <Button onClick={editAddButton}>{product ? "Edit" : "Add"}</Button>
+      <Button variant="secondary" onClick={cancelButton}>
         Cancel
       </Button>
     </form>
@@ -88,3 +93,4 @@ function TextField({ label, placeholder, defaultValue }: TextFieldProps) {
     </Field>
   )
 }
+

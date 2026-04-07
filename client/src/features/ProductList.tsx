@@ -1,4 +1,4 @@
-import Product from "@/features/EditableProduct"
+import EditableProduct from "@/features/EditableProduct"
 import type { ProductType } from "@/types"
 import { AddProductForm, ToggleableAddProductForm } from "./AddProductForm"
 import type { MouseEventHandler } from "react"
@@ -16,7 +16,7 @@ function ProductList({ products }: ProductListProps) {
       <ul className="w-full">
         {products.map((prod) => {
           return (
-            <Product
+            <EditableProduct
               id={prod.id}
               key={prod.id}
               title={prod.title}

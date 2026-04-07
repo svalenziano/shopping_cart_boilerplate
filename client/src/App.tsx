@@ -27,36 +27,36 @@ const MOCK_PRODUCTS = [
     quantity: 18,
     price: 16.75,
   },
-  {
-    id: 5,
-    title: "Raised Garden Bed Kit (4x8 ft)",
-    quantity: 6,
-    price: 89.99,
-  },
-  {
-    id: 6,
-    title: "Worm Castings Fertilizer (15 lb Bag)",
-    quantity: 14,
-    price: 27.50,
-  },
-  {
-    id: 7,
-    title: "Biodegradable Seedling Pots (50-Pack)",
-    quantity: 40,
-    price: 11.25,
-  },
-  {
-    id: 8,
-    title: "Organic Herb Garden Starter Kit",
-    quantity: 9,
-    price: 34.99,
-  },
-  {
-    id: 9,
-    title: "Heavy-Duty Drip Irrigation Set",
-    quantity: 7,
-    price: 47.95,
-  },
+  // {
+  //   id: 5,
+  //   title: "Raised Garden Bed Kit (4x8 ft)",
+  //   quantity: 6,
+  //   price: 89.99,
+  // },
+  // {
+  //   id: 6,
+  //   title: "Worm Castings Fertilizer (15 lb Bag)",
+  //   quantity: 14,
+  //   price: 27.50,
+  // },
+  // {
+  //   id: 7,
+  //   title: "Biodegradable Seedling Pots (50-Pack)",
+  //   quantity: 40,
+  //   price: 11.25,
+  // },
+  // {
+  //   id: 8,
+  //   title: "Organic Herb Garden Starter Kit",
+  //   quantity: 9,
+  //   price: 34.99,
+  // },
+  // {
+  //   id: 9,
+  //   title: "Heavy-Duty Drip Irrigation Set",
+  //   quantity: 7,
+  //   price: 47.95,
+  // },
 ];
 
 function Logo() {
