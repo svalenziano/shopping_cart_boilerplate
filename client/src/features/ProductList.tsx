@@ -7,7 +7,10 @@ interface ProductListProps {
   products: ProductType[]
 }
 
-const placeholder: MouseEventHandler = () => {}
+const placeholder: MouseEventHandler = (ev) => {
+  ev.preventDefault();
+  console.log("doing stuff!")
+}
 
 function ProductList({ products }: ProductListProps) {
   return (
@@ -17,11 +20,8 @@ function ProductList({ products }: ProductListProps) {
         {products.map((prod) => {
           return (
             <EditableProduct
-              id={prod.id}
               key={prod.id}
-              title={prod.title}
-              price={prod.price}
-              quantity={prod.quantity}
+              product={prod}
               addToCartButton={placeholder}
               editButton={placeholder}
             />

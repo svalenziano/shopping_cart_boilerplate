@@ -58,7 +58,7 @@ export function AddProductForm({
   cancelButton,
 }: AddProductFormProps) {
   return (
-    <form>
+    <form className="m-4 rounded-md border-2 p-2">
       {product === undefined ? (
         <h3>Add a new product</h3>
       ) : (
@@ -69,7 +69,7 @@ export function AddProductForm({
       <TextField label={"Price"} placeholder="42.99" defaultValue={product && product.price} />
       <TextField label={"Quantity"} placeholder="42" defaultValue={product && product.quantity} />
 
-      <Button onClick={editAddButton}>{product ? "Edit" : "Add"}</Button>
+      <Button variant="default" onClick={editAddButton}>{product ? "Edit" : "Add"}</Button>
       <Button variant="secondary" onClick={cancelButton}>
         Cancel
       </Button>
@@ -79,7 +79,7 @@ export function AddProductForm({
 
 type TextFieldProps = ComponentProps<typeof Input> & { label: string }
 
-function TextField({ label, placeholder, defaultValue }: TextFieldProps) {
+function TextField({ label, placeholder, defaultValue, disabled }: TextFieldProps) {
   const id = useId()
   return (
     <Field>
@@ -89,6 +89,7 @@ function TextField({ label, placeholder, defaultValue }: TextFieldProps) {
         type="text"
         placeholder={placeholder}
         defaultValue={defaultValue || ""}
+        disabled={disabled}
       />
     </Field>
   )
