@@ -18,13 +18,18 @@ import { Field, FieldDescription, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-import { useId, useState } from "react"
+import { useId, useState, type MouseEventHandler } from "react"
 
 export function AddProductForm({}) {
   const [active, setActive] = useState(false)
 
+  const hideForm: MouseEventHandler = (ev) => {
+    ev.preventDefault()
+    setActive(false)
+  }
+
   if (active) {
-    return <Form />
+    return <Form hideForm={hideForm} />
   }
   return <Button onClick={() => setActive(!active)}>Add A Product</Button>
 }
@@ -41,7 +46,11 @@ export function InputDemo() {
   )
 }
 
-function Form() {
+interface FormProps {
+  hideForm: MouseEventHandler;
+}
+
+function Form({ hideForm }: FormProps) {
   const productId = useId()
   const priceId = useId()
   const qtyId = useId()
@@ -60,8 +69,10 @@ function Form() {
         <FieldLabel htmlFor={qtyId}>Quantity</FieldLabel>
         <Input id={qtyId} type="text" placeholder="3" />
       </Field>
-      <Button>Add</Button>
-      <Button variant="secondary">Cancel</Button>
+      <Button onClick={(ev) => hideForm(ev)}>Add</Button>
+      <Button variant="secondary" onClick={(ev) => hideForm(ev)}>
+        Cancel
+      </Button>
     </form>
   )
 }
