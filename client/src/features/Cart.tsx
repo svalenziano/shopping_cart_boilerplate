@@ -1,4 +1,4 @@
-import type { ProductType } from "@/types"
+import type { APIProduct } from "@/types"
 
 import {
   Table,
@@ -14,7 +14,7 @@ import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface CartWithItemsProps {
-  products: ProductType[]
+  products: APIProduct[]
 }
 
 function Cart({ products }: CartWithItemsProps) {
@@ -55,7 +55,7 @@ function CartWithItems({products}: CartWithItemsProps) {
       </TableHeader>
       <TableBody>
         {products.map((product) => (
-          <TableRow key={product.id}>
+          <TableRow key={product._id}>
             <TableCell className="font-medium">{product.title}</TableCell>
             <TableCell>{product.quantity}</TableCell>
             <TableCell className="text-right">{product.price}</TableCell>

@@ -35,7 +35,7 @@ function EditableProduct({
       {editing ? (
         <AddProductForm
           product={product}
-          onSubmit={onSubmit}
+          onSubmit={onSubmitWrapper}
           cancelButton={() => setEditing(false)}
         />
       ) : null}

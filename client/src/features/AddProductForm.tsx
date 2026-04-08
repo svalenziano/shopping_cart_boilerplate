@@ -65,9 +65,11 @@ export function AddProductForm({
   cancelButton,
   onSubmit,
 }: AddProductFormProps) {
+  
   const handleSubmit: SubmitEventHandler = (ev) => {
     ev.preventDefault()
-    onSubmit(ev) // TODO - REMOVE ASSERTION
+    console.log("submitted!")
+    onSubmit(ev) 
   }
 
   return (
