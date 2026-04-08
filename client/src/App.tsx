@@ -5,62 +5,6 @@ import { useEffect, useState, type SubmitEventHandler } from "react"
 import services from "./services"
 import type { APIProduct } from "./types"
 
-const MOCK_PRODUCTS = [
-  {
-    _id: 1,
-    title: "Organic Compost Mix (40 lb Bag)",
-    quantity: 20,
-    price: 14.99,
-  },
-  {
-    _id: 2,
-    title: "Heirloom Tomato Seed Variety Pack",
-    quantity: 35,
-    price: 8.49,
-  },
-  {
-    _id: 3,
-    title: "Copper Garden Trowel",
-    quantity: 12,
-    price: 22.95,
-  },
-  {
-    _id: 4,
-    title: "Organic Neem Oil Spray (32 oz)",
-    quantity: 18,
-    price: 16.75,
-  },
-  // {
-  //   _id: 5,
-  //   title: "Raised Garden Bed Kit (4x8 ft)",
-  //   quantity: 6,
-  //   price: 89.99,
-  // },
-  // {
-  //   _id: 6,
-  //   title: "Worm Castings Fertilizer (15 lb Bag)",
-  //   quantity: 14,
-  //   price: 27.50,
-  // },
-  // {
-  //   _id: 7,
-  //   title: "Biodegradable Seedling Pots (50-Pack)",
-  //   quantity: 40,
-  //   price: 11.25,
-  // },
-  // {
-  //   _id: 8,
-  //   title: "Organic Herb Garden Starter Kit",
-  //   quantity: 9,
-  //   price: 34.99,
-  // },
-  // {
-  //   _id: 9,
-  //   title: "Heavy-Duty Drip Irrigation Set",
-  //   quantity: 7,
-  //   price: 47.95,
-  // },
-]
 
 function Logo() {
   return (

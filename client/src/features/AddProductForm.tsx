@@ -22,11 +22,9 @@ import {
   useState,
   type ComponentProps,
   type MouseEventHandler,
-  type SubmitEvent,
   type SubmitEventHandler,
 } from "react"
-import { productSchema, type APIProduct, type Product, type ProductHandler } from "@/types"
-import { z } from "zod"
+import { type APIProduct } from "@/types"
 
 type ToggleableAddProductFormProps = {
   onSubmit: SubmitEventHandler
@@ -39,7 +37,6 @@ export function ToggleableAddProductForm({
 
   const toggleForm: MouseEventHandler = (ev) => {
     ev.preventDefault()
-    console.log("toggling!")
     setVisible(!visible)
   }
 
@@ -65,10 +62,9 @@ export function AddProductForm({
   cancelButton,
   onSubmit,
 }: AddProductFormProps) {
-  
+
   const handleSubmit: SubmitEventHandler = (ev) => {
     ev.preventDefault()
-    console.log("submitted!")
     onSubmit(ev) 
   }
 
