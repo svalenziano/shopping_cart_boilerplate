@@ -8,3 +8,5 @@ export const productSchema = z.object({
 })
 
 export type Product = z.infer<typeof productSchema>
+
+export type ProductHandler = (arg0: Product) => void

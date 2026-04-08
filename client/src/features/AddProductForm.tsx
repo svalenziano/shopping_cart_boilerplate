@@ -25,16 +25,16 @@ import {
   type SubmitEvent,
   type SubmitEventHandler,
 } from "react"
-import { productSchema, type Product } from "@/types"
-import { z } from 'zod'
-
-
+import { productSchema, type Product, type ProductHandler } from "@/types"
+import { z } from "zod"
 
 type ToggleableAddProductFormProps = {
-  onAddProduct: Function;
+  onSubmit: SubmitEventHandler
 }
 
-export function ToggleableAddProductForm({ onAddProduct }: ToggleableAddProductFormProps) {
+export function ToggleableAddProductForm({
+  onSubmit,
+}: ToggleableAddProductFormProps) {
   const [visible, setVisible] = useState(false)
 
   const toggleForm: MouseEventHandler = (ev) => {
@@ -44,25 +44,15 @@ export function ToggleableAddProductForm({ onAddProduct }: ToggleableAddProductF
   }
 
   if (visible) {
-    return (
-      <AddProductForm
-        editAddButton={() => {
-          console.log("not implemented")
-        }}
-        cancelButton={toggleForm}
-        onAddProduct={onAddProduct}
-      />
-    )
+    return <AddProductForm cancelButton={toggleForm} onSubmit={onSubmit} />
   }
   return <Button onClick={toggleForm}>Add A Product</Button>
 }
 
 type AddProductFormProps = {
-  product?: Product;
-  editAddButton: MouseEventHandler;
-  cancelButton: MouseEventHandler;
-  onAddProduct?: (arg0: Product) => void;
-  onEditProduct?: (arg0: Product) => void;
+  product?: Product
+  cancelButton: MouseEventHandler
+  onSubmit: SubmitEventHandler
 }
 
 /**
@@ -72,30 +62,16 @@ type AddProductFormProps = {
  */
 export function AddProductForm({
   product,
-  editAddButton,
   cancelButton,
-  onAddProduct,
-  onEditProduct,
+  onSubmit,
 }: AddProductFormProps) {
-  
-  function handleSubmit(ev): MouseEventHandler {
+  const handleSubmit: SubmitEventHandler = (ev) => {
     ev.preventDefault()
-    const form = ev.target.closest('form')
-
-    const handler = product ? onEditProduct : onAddProduct
-    if (!handler) throw Error("A handler must be provided")
-    const formdata = Object.fromEntries(new FormData(form))
-    // const parsedProduct = z.safeParse(productSchema, formdata)
-    
-    // console.log("NEW/EDITED PRODUCT!")
-    // console.log(parsedProduct)
-    handler(formdata as unknown as Product)  // TODO - REMOVE ASSERTION
+    onSubmit(ev) // TODO - REMOVE ASSERTION
   }
 
-
-
   return (
-    <form className="m-4 rounded-md border-2 p-2">
+    <form className="m-4 rounded-md border-2 p-2" onSubmit={handleSubmit}>
       {product === undefined ? (
         <h3>Add a new product</h3>
       ) : (
@@ -104,30 +80,31 @@ export function AddProductForm({
       {product ? (
         <TextField
           label={"ID"}
+          name="id"
           defaultValue={product && product.id}
-          disabled={true}
+          readOnly={true}
         />
       ) : null}
       <TextField
         label={"Product Name"}
-        name='title'
+        name="title"
         placeholder="New name"
         defaultValue={product && product.title}
       />
       <TextField
         label={"Price"}
-        name='price'
+        name="price"
         placeholder="42.99"
         defaultValue={product && product.price}
       />
       <TextField
         label={"Quantity"}
-        name='quantity'
+        name="quantity"
         placeholder="42"
         defaultValue={product && product.quantity}
       />
 
-      <Button variant="confirm" onClick={handleSubmit}>
+      <Button variant="confirm" type="submit">
         {product ? "Edit" : "Add"}
       </Button>
       <Button variant="secondary" onClick={cancelButton}>
@@ -145,6 +122,7 @@ function TextField({
   defaultValue,
   disabled,
   name,
+  readOnly,
 }: TextFieldProps) {
   const id = useId()
   return (
@@ -157,6 +135,7 @@ function TextField({
         defaultValue={defaultValue || ""}
         disabled={disabled}
         name={name}
+        readOnly={readOnly}
       />
     </Field>
   )

@@ -1,7 +1,7 @@
-import { Flower } from "lucide-react";
-import Cart from "./features/Cart";
-import ProductList from "./features/ProductList";
-import type { Product } from "./types";
+import { Flower } from "lucide-react"
+import Cart from "./features/Cart"
+import ProductList from "./features/ProductList"
+import type { MouseEvent, MouseEventHandler, SubmitEventHandler } from "react"
 
 const MOCK_PRODUCTS = [
   {
@@ -58,33 +58,42 @@ const MOCK_PRODUCTS = [
   //   quantity: 7,
   //   price: 47.95,
   // },
-];
+]
 
 function Logo() {
   return (
-    <div className="flex justify-start h-60 p-10">
-      <Flower className="w-full h-full"/>
+    <div className="flex h-60 justify-start p-10">
+      <Flower className="h-full w-full" />
       <h1 className="text-4xl">flower shop</h1>
     </div>
   )
 }
 
-
-
 export function App() {
+  const handleAddProduct: SubmitEventHandler = (ev) => {
+    const form = ev.target // TODO - REMOVE ASSERTION
 
-  function handleAddProduct(product: Product) {
-    console.log("Adding product to inventory:")
-    console.log(product)
+    const formdata = Object.fromEntries(new FormData(form))
+
+    // console.log("NEW/EDITED PRODUCT!")
+    // console.log(formdata)
+    // console.log("Adding product to inventory:")
+    // console.log(product)
+    if ("id" in formdata) {
+      console.log(`Editing product:`)
+      console.log(formdata)
+    } else {
+      console.log(`Adding product:`)
+      console.log(formdata)
+    }
   }
 
   return (
     <div className="flex min-h-svh p-6">
-      
       <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
         <Logo />
-        <Cart products={MOCK_PRODUCTS.slice(2,5)} />
-        <ProductList products={MOCK_PRODUCTS} onAddProduct={handleAddProduct} />
+        <Cart products={MOCK_PRODUCTS.slice(2, 5)} />
+        <ProductList products={MOCK_PRODUCTS} onSubmit={handleAddProduct} />
       </div>
     </div>
   )
