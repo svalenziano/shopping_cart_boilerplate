@@ -1,10 +1,11 @@
 import EditableProduct from "@/features/EditableProduct"
-import type { ProductType } from "@/types"
-import { AddProductForm, ToggleableAddProductForm } from "./AddProductForm"
+import type { Product } from "@/types"
+import { ToggleableAddProductForm } from "./AddProductForm"
 import type { MouseEventHandler } from "react"
 
 interface ProductListProps {
-  products: ProductType[]
+  products: Product[]
+  onAddProduct: Function
 }
 
 const placeholder: MouseEventHandler = (ev) => {
@@ -12,7 +13,7 @@ const placeholder: MouseEventHandler = (ev) => {
   console.log("doing stuff!")
 }
 
-function ProductList({ products }: ProductListProps) {
+function ProductList({ products, onAddProduct }: ProductListProps) {
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>
@@ -28,7 +29,7 @@ function ProductList({ products }: ProductListProps) {
           )
         })}
       </ul>
-      <ToggleableAddProductForm />
+      <ToggleableAddProductForm onAddProduct={onAddProduct} />
     </div>
   )
 }

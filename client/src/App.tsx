@@ -1,6 +1,7 @@
 import { Flower } from "lucide-react";
 import Cart from "./features/Cart";
 import ProductList from "./features/ProductList";
+import type { Product } from "./types";
 
 const MOCK_PRODUCTS = [
   {
@@ -68,14 +69,22 @@ function Logo() {
   )
 }
 
+
+
 export function App() {
+
+  function handleAddProduct(product: Product) {
+    console.log("Adding product to inventory:")
+    console.log(product)
+  }
+
   return (
     <div className="flex min-h-svh p-6">
       
       <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
         <Logo />
         <Cart products={MOCK_PRODUCTS.slice(2,5)} />
-        <ProductList products={MOCK_PRODUCTS} />
+        <ProductList products={MOCK_PRODUCTS} onAddProduct={handleAddProduct} />
       </div>
     </div>
   )

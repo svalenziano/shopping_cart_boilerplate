@@ -14,7 +14,7 @@
 // if active, return form
 // otherwise, return button
 
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field"
+import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,10 +22,16 @@ import {
   useState,
   type ComponentProps,
   type MouseEventHandler,
+  type SubmitEvent,
+  type SubmitEventHandler,
 } from "react"
-import type { ProductType } from "@/types"
+import type { Product } from "@/types"
 
-export function ToggleableAddProductForm() {
+type ToggleableAddProductFormProps = {
+  onAddProduct: Function;
+}
+
+export function ToggleableAddProductForm({ onAddProduct }: ToggleableAddProductFormProps) {
   const [visible, setVisible] = useState(false)
 
   const toggleForm: MouseEventHandler = (ev) => {
@@ -35,17 +41,26 @@ export function ToggleableAddProductForm() {
   }
 
   if (visible) {
-    return <AddProductForm editAddButton={() => {console.log("not implemented")}} cancelButton={toggleForm} />
+    return (
+      <AddProductForm
+        editAddButton={() => {
+          console.log("not implemented")
+        }}
+        cancelButton={toggleForm}
+        onAddProduct={onAddProduct}
+      />
+    )
   }
   return <Button onClick={toggleForm}>Add A Product</Button>
 }
 
 type AddProductFormProps = {
-  product?: ProductType;
+  product?: Product;
   editAddButton: MouseEventHandler;
   cancelButton: MouseEventHandler;
+  onAddProduct?: (arg0: Product) => void;
+  onEditProduct?: (arg0: Product) => void;
 }
-
 
 /**
   Srdjan: 
@@ -56,7 +71,36 @@ export function AddProductForm({
   product,
   editAddButton,
   cancelButton,
+  onAddProduct,
+  onEditProduct,
 }: AddProductFormProps) {
+  
+
+
+  if (product && !onEditProduct) {
+    throw Error("If passing a product you must provide an onEditProduct handler")
+  }
+  if (!product && !onAddProduct) {
+    throw Error("If not passing a product, you must provide an onAddProduct handler")
+  }
+
+  function handleSubmit(ev): MouseEventHandler {
+    ev.preventDefault()
+    const form = ev.target.closest('form')
+    console.log(ev.target)
+
+    const handler = product ? onEditProduct : onAddProduct
+    if (!handler) throw Error("A handler must be provided")
+    const formdata = new FormData(form)
+    const formObject = Object.fromEntries(formdata.entries())
+    
+    console.log("NEW/EDITED PRODUCT!")
+    console.log(formObject)
+    // handler({'placeholder': 'lorem'})
+  }
+
+
+
   return (
     <form className="m-4 rounded-md border-2 p-2">
       {product === undefined ? (
@@ -64,12 +108,32 @@ export function AddProductForm({
       ) : (
         <h3>Edit product</h3>
       )}
-      {product ? <TextField label={"ID"} defaultValue={product && product.id} disabled={true}/> : null}
-      <TextField label={"Product Name"} placeholder="New name" defaultValue={product && product.title} />
-      <TextField label={"Price"} placeholder="42.99" defaultValue={product && product.price} />
-      <TextField label={"Quantity"} placeholder="42" defaultValue={product && product.quantity} />
+      {product ? (
+        <TextField
+          label={"ID"}
+          defaultValue={product && product.id}
+          disabled={true}
+        />
+      ) : null}
+      <TextField
+        label={"Product Name"}
+        placeholder="New name"
+        defaultValue={product && product.title}
+      />
+      <TextField
+        label={"Price"}
+        placeholder="42.99"
+        defaultValue={product && product.price}
+      />
+      <TextField
+        label={"Quantity"}
+        placeholder="42"
+        defaultValue={product && product.quantity}
+      />
 
-      <Button variant="confirm" onClick={editAddButton}>{product ? "Edit" : "Add"}</Button>
+      <Button variant="confirm" onClick={handleSubmit}>
+        {product ? "Edit" : "Add"}
+      </Button>
       <Button variant="secondary" onClick={cancelButton}>
         Cancel
       </Button>
@@ -79,7 +143,12 @@ export function AddProductForm({
 
 type TextFieldProps = ComponentProps<typeof Input> & { label: string }
 
-function TextField({ label, placeholder, defaultValue, disabled }: TextFieldProps) {
+function TextField({
+  label,
+  placeholder,
+  defaultValue,
+  disabled,
+}: TextFieldProps) {
   const id = useId()
   return (
     <Field>
@@ -94,4 +163,3 @@ function TextField({ label, placeholder, defaultValue, disabled }: TextFieldProp
     </Field>
   )
 }
-
