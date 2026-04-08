@@ -25,7 +25,8 @@ import {
   type SubmitEvent,
   type SubmitEventHandler,
 } from "react"
-import type { Product } from "@/types"
+import { productSchema, type Product } from "@/types"
+import { z } from 'zod'
 
 type ToggleableAddProductFormProps = {
   onAddProduct: Function;
@@ -87,16 +88,15 @@ export function AddProductForm({
   function handleSubmit(ev): MouseEventHandler {
     ev.preventDefault()
     const form = ev.target.closest('form')
-    console.log(ev.target)
 
-    const handler = product ? onEditProduct : onAddProduct
-    if (!handler) throw Error("A handler must be provided")
-    const formdata = new FormData(form)
-    const formObject = Object.fromEntries(formdata.entries())
+    // const handler = product ? onEditProduct : onAddProduct
+    // if (!handler) throw Error("A handler must be provided")
+    const formdata = Object.fromEntries(new FormData(form))
+    // const product = z.parse(productSchema, formdata)
     
     console.log("NEW/EDITED PRODUCT!")
-    console.log(formObject)
-    // handler({'placeholder': 'lorem'})
+    console.log(formdata)
+    // handler(product)
   }
 
 
@@ -117,16 +117,19 @@ export function AddProductForm({
       ) : null}
       <TextField
         label={"Product Name"}
+        name='title'
         placeholder="New name"
         defaultValue={product && product.title}
       />
       <TextField
         label={"Price"}
+        name='price'
         placeholder="42.99"
         defaultValue={product && product.price}
       />
       <TextField
         label={"Quantity"}
+        name='quantity'
         placeholder="42"
         defaultValue={product && product.quantity}
       />
@@ -148,6 +151,7 @@ function TextField({
   placeholder,
   defaultValue,
   disabled,
+  name,
 }: TextFieldProps) {
   const id = useId()
   return (
@@ -159,6 +163,7 @@ function TextField({
         placeholder={placeholder}
         defaultValue={defaultValue || ""}
         disabled={disabled}
+        name={name}
       />
     </Field>
   )
