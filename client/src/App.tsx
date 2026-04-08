@@ -90,7 +90,7 @@ export function App() {
     // console.log(formdata)
     // console.log("Adding product to inventory:")
     // console.log(product)
-    if ("id" in formdata) {
+    if ("_id" in formdata) {
       console.log(`Editing product:`)
       console.log(formdata)
     } else {

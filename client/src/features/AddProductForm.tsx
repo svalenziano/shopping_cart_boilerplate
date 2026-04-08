@@ -25,7 +25,7 @@ import {
   type SubmitEvent,
   type SubmitEventHandler,
 } from "react"
-import { productSchema, type Product, type ProductHandler } from "@/types"
+import { productSchema, type APIProduct, type Product, type ProductHandler } from "@/types"
 import { z } from "zod"
 
 type ToggleableAddProductFormProps = {
@@ -50,7 +50,7 @@ export function ToggleableAddProductForm({
 }
 
 type AddProductFormProps = {
-  product?: Product
+  product?: APIProduct
   cancelButton: MouseEventHandler
   onSubmit: SubmitEventHandler
 }
@@ -80,8 +80,8 @@ export function AddProductForm({
       {product ? (
         <TextField
           label={"ID"}
-          name="id"
-          defaultValue={product && product.id}
+          name="_id"
+          defaultValue={product && product._id}
           readOnly={true}
         />
       ) : null}

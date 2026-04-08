@@ -1,12 +1,12 @@
 import EditableProduct from "@/features/EditableProduct"
-import type { Product } from "@/types"
+import type { APIProduct, Product } from "@/types"
 import { ToggleableAddProductForm } from "./AddProductForm"
 import type { FormEventHandler, MouseEventHandler, SubmitEventHandler } from "react"
 
 
 
 interface ProductListProps {
-  products: Product[]
+  products: APIProduct[]
   onSubmit: SubmitEventHandler
 }
 
@@ -23,7 +23,7 @@ function ProductList({ products, onSubmit }: ProductListProps) {
         {products.map((prod) => {
           return (
             <EditableProduct
-              key={prod.id}
+              key={prod._id}
               product={prod}
               addToCartButton={placeholder}
               onSubmit={onSubmit}

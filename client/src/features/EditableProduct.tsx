@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button"
-import type { ProductHandler, Product } from "@/types/index"
+import type { ProductHandler, Product, APIProduct } from "@/types/index"
 import type React from "react"
 import { useState, type MouseEventHandler, type SubmitEventHandler } from "react"
 import { AddProductForm } from "./AddProductForm"
 
 interface ProductProps {
-  product: Product;
+  product: APIProduct;
   addToCartButton: React.MouseEventHandler;
   onSubmit: SubmitEventHandler;
 }
