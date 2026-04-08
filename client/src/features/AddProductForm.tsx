@@ -28,6 +28,8 @@ import {
 import { productSchema, type Product } from "@/types"
 import { z } from 'zod'
 
+
+
 type ToggleableAddProductFormProps = {
   onAddProduct: Function;
 }
@@ -76,27 +78,18 @@ export function AddProductForm({
   onEditProduct,
 }: AddProductFormProps) {
   
-
-
-  if (product && !onEditProduct) {
-    throw Error("If passing a product you must provide an onEditProduct handler")
-  }
-  if (!product && !onAddProduct) {
-    throw Error("If not passing a product, you must provide an onAddProduct handler")
-  }
-
   function handleSubmit(ev): MouseEventHandler {
     ev.preventDefault()
     const form = ev.target.closest('form')
 
-    // const handler = product ? onEditProduct : onAddProduct
-    // if (!handler) throw Error("A handler must be provided")
+    const handler = product ? onEditProduct : onAddProduct
+    if (!handler) throw Error("A handler must be provided")
     const formdata = Object.fromEntries(new FormData(form))
-    // const product = z.parse(productSchema, formdata)
+    // const parsedProduct = z.safeParse(productSchema, formdata)
     
-    console.log("NEW/EDITED PRODUCT!")
-    console.log(formdata)
-    // handler(product)
+    // console.log("NEW/EDITED PRODUCT!")
+    // console.log(parsedProduct)
+    handler(formdata as unknown as Product)  // TODO - REMOVE ASSERTION
   }
 
 
