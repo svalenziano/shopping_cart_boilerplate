@@ -20,6 +20,19 @@ async function createProduct(product: partialAPIProduct): Promise<APIProduct> {
   return apiProductSchema.parse(await response.json())
 }
 
+async function updateProduct(product: partialAPIProduct): Promise<APIProduct> {
+  if (!("_id" in product)) throw new Error("product is missing _id")
+  const response = await fetch(`/api/products/${product._id}`, {
+    method: "PUT",
+    body: JSON.stringify(product),
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+  checkResponse(response, "Failed to update product")
+  return apiProductSchema.parse(await response.json())
+}
+
 function checkResponse(response: Response, errorMessage: string) {
   if (!response.ok) {
     throw new Error(errorMessage)
@@ -29,4 +42,5 @@ function checkResponse(response: Response, errorMessage: string) {
 export default {
   getProducts,
   createProduct,
+  updateProduct,
 }

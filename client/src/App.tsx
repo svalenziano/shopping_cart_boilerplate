@@ -35,16 +35,21 @@ export function App() {
     // console.log(formdata)
     // console.log("Adding product to inventory:")
     // console.log(product)
+
     if ("_id" in product) {
       console.log(`Editing product:`)
       console.log(product)
+      const updatedProduct = await services.updateProduct(product)
+      setProducts(products.map((oldProduct) => {
+        if (oldProduct._id === updatedProduct._id) return updatedProduct
+        else return oldProduct
+      }))
     } else {
       console.log(`Adding product:`)
       console.log(product)
-      const createdProduct = await services.createProduct(product)
-      setProducts([...products, createdProduct])
+      const newProduct = await services.createProduct(product)
+      setProducts([...products, newProduct])
     }
-
   }
 
   return (
