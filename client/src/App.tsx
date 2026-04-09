@@ -92,10 +92,16 @@ export function App() {
         else return oldProduct
       }))
 
-      setCart(cart.map((oldCartItem) => {
-        if (oldCartItem._id === results.item._id) return results.item
-        else return oldCartItem
-      }))
+      const existsInCart = !!cart.find((product) => product._id === results.item._id)
+      if (existsInCart) {
+        setCart(cart.map((oldCartItem) => {
+          if (oldCartItem._id === results.item._id) return results.item
+          else return oldCartItem
+        }))
+      } else {
+        setCart([...cart, results.item])
+      }
+      toast.info(`${results.item.title} added to cart.`)
 
     } catch (e) {
       console.error(e)

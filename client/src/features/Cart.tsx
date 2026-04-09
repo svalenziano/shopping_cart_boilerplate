@@ -42,8 +42,12 @@ function EmptyCart() {
   )
 }
 
+function toCurrency(amount: number): string {                         
+  return amount.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}   
+
 function CartWithItems({products}: CartWithItemsProps) {
-  const totalPrice = products.reduce((accum, product) => accum += product.price, 0)
+  const totalPrice = products.reduce((accum, product) => accum += (product.price + product.quantity), 0)
   return (
     <Table>
       <TableHeader>
@@ -58,14 +62,14 @@ function CartWithItems({products}: CartWithItemsProps) {
           <TableRow key={product._id}>
             <TableCell className="font-medium">{product.title}</TableCell>
             <TableCell>{product.quantity}</TableCell>
-            <TableCell className="text-right">{product.price}</TableCell>
+            <TableCell className="text-right">{toCurrency(product.price)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{totalPrice}</TableCell>
+          <TableCell className="text-right">{toCurrency(totalPrice)}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

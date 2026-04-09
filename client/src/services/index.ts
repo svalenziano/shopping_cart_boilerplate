@@ -64,7 +64,8 @@ async function addToCart(product_id: string): Promise<AddToCartReponse> {
     }
   })
   checkResponse(response, "Failed to add to cart")
-  return await response.json() as AddToCartReponse
+  const weird_data = await response.json() as AddToCartReponse
+  return weird_data
 }
 
 function checkResponse(response: Response, errorMessage: string) {
