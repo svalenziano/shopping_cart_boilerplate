@@ -10,16 +10,16 @@ import { AddEditProductForm } from "./AddProductForm"
 
 interface ProductProps {
   product: APIProduct
-  addToCartButton: React.MouseEventHandler
   onSubmit: SubmitEventHandler
   onDelete: MouseEventHandler
+  onAddToCart: Function
 }
 
 function EditableProduct({
   product,
   onSubmit,
   onDelete,
-  addToCartButton,
+  onAddToCart,
 }: ProductProps) {
   const [editing, setEditing] = useState(false)
 
@@ -29,12 +29,17 @@ function EditableProduct({
     setEditing(false)
   }
 
+  const handleAddToCart: MouseEventHandler = (ev) => {
+    ev.preventDefault()
+    onAddToCart(product)
+  }
+
   return (
     <div className="m-4 rounded-md border-2 p-2">
       <h3>{product.title}</h3>
       <p>${`${product.price}`}</p>
       <p>{`${product.quantity} left in stock`}</p>
-      <Button onClick={addToCartButton}>Add to Cart</Button>
+      <Button onClick={handleAddToCart}>Add to Cart</Button>
       <Button onClick={() => setEditing(true)} variant="secondary">
         Edit
       </Button>

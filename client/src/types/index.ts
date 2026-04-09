@@ -28,3 +28,4 @@ export const partialAPIProductSchema = apiProductSchema.partial({
   updatedAt: true,
 })
 export type partialAPIProduct = z.infer<typeof partialAPIProductSchema>
+

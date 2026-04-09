@@ -1,7 +1,12 @@
 import { Flower } from "lucide-react"
 import Cart from "./features/Cart"
 import ProductList from "./features/ProductList"
-import { useEffect, useState, type MouseEventHandler, type SubmitEventHandler } from "react"
+import {
+  useEffect,
+  useState,
+  type MouseEventHandler,
+  type SubmitEventHandler,
+} from "react"
 import services from "./services"
 import {
   apiProductSchema,
@@ -61,16 +66,37 @@ export function App() {
 
   const handleDelete: MouseEventHandler = async (ev) => {
     ev.preventDefault()
-    const form = (ev.target as HTMLElement).closest('form')!
+    const form = (ev.target as HTMLElement).closest("form")!
     const formdata = Object.fromEntries(new FormData(form))
     const productToDelete = z.parse(partialAPIProductSchema, formdata)
 
     try {
       services.deleteProduct(productToDelete)
-      setProducts(products.filter((exstProduct) => {
-        return !(exstProduct._id === productToDelete._id)
-      }))
+      setProducts(
+        products.filter((exstProduct) => {
+          return !(exstProduct._id === productToDelete._id)
+        })
+      )
       toast.info(`"${productToDelete.title}" was deleted`)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const handleAddToCart = async (product: APIProduct) => {
+    try {
+      const results = await services.addToCart(product._id)
+
+      setProducts(products.map((oldProduct) => {
+        if (oldProduct._id === product._id) return results.product
+        else return oldProduct
+      }))
+
+      setCart(cart.map((oldCartItem) => {
+        if (oldCartItem._id === product._id) return results.item
+        else return oldCartItem
+      }))
+
     } catch (e) {
       console.error(e)
     }
@@ -81,7 +107,12 @@ export function App() {
       <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
         <Logo />
         <Cart products={cart} />
-        <ProductList products={products} onSubmit={handleAddEditProduct} onDelete={handleDelete} />
+        <ProductList
+          products={products}
+          onSubmit={handleAddEditProduct}
+          onDelete={handleDelete}
+          onAddToCart={handleAddToCart}
+        />
       </div>
     </div>
   )

@@ -11,6 +11,7 @@ interface ProductListProps {
   products: APIProduct[]
   onSubmit: SubmitEventHandler
   onDelete: MouseEventHandler
+  onAddToCart: Function
 }
 
 const placeholder: MouseEventHandler = (ev) => {
@@ -18,7 +19,7 @@ const placeholder: MouseEventHandler = (ev) => {
   console.log("doing stuff!")
 }
 
-function ProductList({ products, onSubmit, onDelete }: ProductListProps) {
+function ProductList({ products, onSubmit, onDelete, onAddToCart }: ProductListProps) {
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>
@@ -28,9 +29,9 @@ function ProductList({ products, onSubmit, onDelete }: ProductListProps) {
             <EditableProduct
               key={prod._id}
               product={prod}
-              addToCartButton={placeholder}
               onSubmit={onSubmit}
               onDelete={onDelete}
+              onAddToCart={onAddToCart}
             />
           )
         })}

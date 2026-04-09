@@ -48,6 +48,25 @@ async function getCart(): Promise<APIProduct[]> {
   return apiProductListSchema.parse(await response.json())
 }
 
+
+type AddToCartReponse = {
+  'product': APIProduct, // updated product for the shop inventory
+  'item': APIProduct,    // shopping cart item to be added to the user cart
+}
+
+async function addToCart(product_id: string): Promise<AddToCartReponse> {
+  
+  const response = await fetch("/api/add-to-cart", {
+    method: "POST",
+    body: JSON.stringify({'productId': product_id}),
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+  checkResponse(response, "Failed to add to cart")
+  return await response.json() as AddToCartReponse
+}
+
 function checkResponse(response: Response, errorMessage: string) {
   if (!response.ok) {
     throw new Error("API Error: " + errorMessage)
@@ -60,4 +79,5 @@ export default {
   updateProduct,
   deleteProduct,
   getCart,
+  addToCart,
 }
