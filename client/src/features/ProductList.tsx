@@ -28,7 +28,7 @@ function ProductList({
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>
-      <ul className="w-full grid-cols-2 grid-flow-row">
+      <ul className="w-full grid grid-cols-2 grid-flow-row gap-0">
         {products.map((prod) => {
           return (
             <EditableProduct

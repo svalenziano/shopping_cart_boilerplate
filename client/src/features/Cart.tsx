@@ -59,7 +59,7 @@ function toCurrency(amount: number): string {
 
 function CartWithItems({ products, onCheckout }: CartWithItemsProps) {
   const totalPrice = products.reduce(
-    (accum, product) => (accum += product.price + product.quantity),
+    (accum, product) => (accum += (product.price * product.quantity)),
     0
   )
   return (
