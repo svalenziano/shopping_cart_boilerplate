@@ -1,81 +1,137 @@
-import { Flower } from "lucide-react";
-import Cart from "./features/Cart";
-import ProductList from "./features/ProductList";
-
-const MOCK_PRODUCTS = [
-  {
-    id: 1,
-    title: "Organic Compost Mix (40 lb Bag)",
-    quantity: 20,
-    price: 14.99,
-  },
-  {
-    id: 2,
-    title: "Heirloom Tomato Seed Variety Pack",
-    quantity: 35,
-    price: 8.49,
-  },
-  {
-    id: 3,
-    title: "Copper Garden Trowel",
-    quantity: 12,
-    price: 22.95,
-  },
-  {
-    id: 4,
-    title: "Organic Neem Oil Spray (32 oz)",
-    quantity: 18,
-    price: 16.75,
-  },
-  {
-    id: 5,
-    title: "Raised Garden Bed Kit (4x8 ft)",
-    quantity: 6,
-    price: 89.99,
-  },
-  {
-    id: 6,
-    title: "Worm Castings Fertilizer (15 lb Bag)",
-    quantity: 14,
-    price: 27.50,
-  },
-  {
-    id: 7,
-    title: "Biodegradable Seedling Pots (50-Pack)",
-    quantity: 40,
-    price: 11.25,
-  },
-  {
-    id: 8,
-    title: "Organic Herb Garden Starter Kit",
-    quantity: 9,
-    price: 34.99,
-  },
-  {
-    id: 9,
-    title: "Heavy-Duty Drip Irrigation Set",
-    quantity: 7,
-    price: 47.95,
-  },
-];
+import { Flower } from "lucide-react"
+import Cart from "./features/Cart"
+import ProductList from "./features/ProductList"
+import {
+  useEffect,
+  useState,
+  type MouseEventHandler,
+  type SubmitEventHandler,
+} from "react"
+import services from "./services"
+import {
+  apiProductSchema,
+  partialAPIProductSchema,
+  type APIProduct,
+} from "./types"
+import z from "zod"
+import { toast } from "sonner"
 
 function Logo() {
   return (
-    <div className="flex justify-start h-60 p-10">
-      <Flower className="w-full h-full"/>
+    <div className="flex h-60 justify-start p-10">
+      <Flower className="h-full w-full" />
       <h1 className="text-4xl">flower shop</h1>
     </div>
   )
 }
 
 export function App() {
+  const [products, setProducts] = useState<APIProduct[]>([])
+  const [cart, setCart] = useState<APIProduct[]>([])
+
+  useEffect(() => {
+    async function getCart() {
+      setCart(await services.getCart())
+    }
+    getCart()
+  }, [])
+
+  useEffect(() => {
+    async function getProducts() {
+      setProducts(await services.getProducts())
+    }
+    getProducts()
+  }, [])
+
+  const handleAddEditProduct: SubmitEventHandler = async (ev) => {
+    const form = ev.target
+    const formdata = Object.fromEntries(new FormData(form))
+    const product = z.parse(partialAPIProductSchema, formdata)
+
+    if ("_id" in product) {
+      const updatedProduct = await services.updateProduct(product)
+      setProducts(
+        products.map((oldProduct) => {
+          if (oldProduct._id === updatedProduct._id) return updatedProduct
+          else return oldProduct
+        })
+      )
+      toast.info(`"${updatedProduct.title}" was edited`)
+    } else {
+      const newProduct = await services.createProduct(product)
+      setProducts([...products, newProduct])
+      toast.info(`"${newProduct.title}" was added`)
+    }
+  }
+
+  const handleDelete: MouseEventHandler = async (ev) => {
+    ev.preventDefault()
+    const form = (ev.target as HTMLElement).closest("form")!
+    const formdata = Object.fromEntries(new FormData(form))
+    const productToDelete = z.parse(partialAPIProductSchema, formdata)
+
+    try {
+      services.deleteProduct(productToDelete)
+      setProducts(
+        products.filter((exstProduct) => {
+          return !(exstProduct._id === productToDelete._id)
+        })
+      )
+      toast.info(`"${productToDelete.title}" was deleted`)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const handleAddToCart = async (product: APIProduct) => {
+    try {
+      const results = await services.addToCart(product._id)
+
+      setProducts(products.map((oldProduct) => {
+        if (oldProduct._id === product._id) return results.product
+        else return oldProduct
+      }))
+
+      const existsInCart = !!cart.find((product) => product._id === results.item._id)
+      if (existsInCart) {
+        setCart(cart.map((oldCartItem) => {
+          if (oldCartItem._id === results.item._id) return results.item
+          else return oldCartItem
+        }))
+      } else {
+        setCart([...cart, results.item])
+      }
+      toast.success(`${results.item.title} added to cart.`)
+
+    } catch (e) {
+      toast.error("Could not add to cart ☹️, please try again")
+      console.error(e)
+    }
+  }
+
+  const handleCheckout: MouseEventHandler = async (ev) => {
+    ev.preventDefault()
+    try {
+      await services.checkout()
+      setCart([])
+      toast.success("Checkout success! 👍")
+    } catch (e) {
+      console.error(e)
+      toast.error("Checkout failed ☹️")
+    }
+  }
+
   return (
     <div className="flex min-h-svh p-6">
-      
-      <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
+      <div className="flex max-w-3xl min-w-md flex-col gap-4 text-sm leading-loose">
         <Logo />
-        <Cart products={MOCK_PRODUCTS.slice(2,5)} />
-        <ProductList products={MOCK_PRODUCTS} />
+        <Cart products={cart} onCheckout={handleCheckout} />
+        <ProductList
+          products={products}
+          onSubmit={handleAddEditProduct}
+          onDelete={handleDelete}
+          onAddToCart={handleAddToCart}
+        />
       </div>
     </div>
   )

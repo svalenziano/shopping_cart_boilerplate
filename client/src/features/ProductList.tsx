@@ -1,34 +1,47 @@
-import Product from "@/features/EditableProduct"
-import type { ProductType } from "@/types"
-import { AddProductForm, ToggleableAddProductForm } from "./AddProductForm"
-import type { MouseEventHandler } from "react"
+import EditableProduct from "@/features/EditableProduct"
+import type { APIProduct, Product } from "@/types"
+import { ToggleableAddEditProductForm } from "./AddEditProductForm"
+import type {
+  FormEventHandler,
+  MouseEventHandler,
+  SubmitEventHandler,
+} from "react"
 
 interface ProductListProps {
-  products: ProductType[]
+  products: APIProduct[]
+  onSubmit: SubmitEventHandler
+  onDelete: MouseEventHandler
+  onAddToCart: Function
 }
 
-const placeholder: MouseEventHandler = () => {}
+const placeholder: MouseEventHandler = (ev) => {
+  ev.preventDefault()
+  console.log("doing stuff!")
+}
 
-function ProductList({ products }: ProductListProps) {
+function ProductList({
+  products,
+  onSubmit,
+  onDelete,
+  onAddToCart,
+}: ProductListProps) {
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>
-      <ul className="w-full">
+      <ul className="w-full grid grid-cols-2 grid-flow-row gap-0">
         {products.map((prod) => {
           return (
-            <Product
-              id={prod.id}
-              key={prod.id}
-              title={prod.title}
-              price={prod.price}
-              quantity={prod.quantity}
-              addToCartButton={placeholder}
-              editButton={placeholder}
+            <EditableProduct
+              key={prod._id}
+              product={prod}
+              onSubmit={onSubmit}
+              onDelete={onDelete}
+              onAddToCart={onAddToCart}
             />
           )
         })}
       </ul>
-      <ToggleableAddProductForm />
+      <ToggleableAddEditProductForm onSubmit={onSubmit} onDelete={onDelete} />
     </div>
   )
 }

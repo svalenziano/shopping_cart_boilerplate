@@ -90,7 +90,9 @@ router.post("/add-to-cart", (req, res, next) => {
           const { error, ...product } = updatedProduct.toObject();
           res.json({ product, item });
         });
-    });
+    }).catch((reason) => {
+      console.error(reason)
+    })
 });
 
 router.post("/checkout", (req, res) => {

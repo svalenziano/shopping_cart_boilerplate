@@ -1,4 +1,4 @@
-import type { ProductType } from "@/types"
+import type { APIProduct } from "@/types"
 
 import {
   Table,
@@ -12,23 +12,34 @@ import {
 } from "@/components/ui/table"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { MouseEventHandler } from "react"
 
 interface CartWithItemsProps {
-  products: ProductType[]
+  products: APIProduct[]
+  onCheckout: MouseEventHandler
 }
 
-function Cart({ products }: CartWithItemsProps) {
-  const productCount = products.reduce((accum, product) => accum += product.quantity, 0)
+function Cart({ products, onCheckout }: CartWithItemsProps) {
+  const productCount = products.reduce(
+    (accum, product) => (accum += product.quantity),
+    0
+  )
 
   return (
-    <div className="m-4 border-2 p-2 rounded-md">
+    <div className="m-4 rounded-md border-2 p-2">
       <div className="flex justify-start">
-        <ShoppingCart className="mr-2"/>
-        <h2 >Your Cart</h2>
+        <ShoppingCart className="mr-2" />
+        <h2>Your Cart</h2>
       </div>
-      {productCount <= 0 ? <EmptyCart /> : <CartWithItems products={ products }/>}
+      {productCount <= 0 ? (
+        <EmptyCart />
+      ) : (
+        <CartWithItems products={products} onCheckout={onCheckout} />
+      )}
       <div className="flex justify-end">
-        <Button disabled={productCount <= 0}>Checkout</Button>
+        <Button disabled={productCount <= 0} onClick={onCheckout}>
+          Checkout
+        </Button>
       </div>
     </div>
   )
@@ -42,8 +53,15 @@ function EmptyCart() {
   )
 }
 
-function CartWithItems({products}: CartWithItemsProps) {
-  const totalPrice = products.reduce((accum, product) => accum += product.price, 0)
+function toCurrency(amount: number): string {
+  return amount.toLocaleString("en-US", { style: "currency", currency: "USD" })
+}
+
+function CartWithItems({ products, onCheckout }: CartWithItemsProps) {
+  const totalPrice = products.reduce(
+    (accum, product) => (accum += (product.price * product.quantity)),
+    0
+  )
   return (
     <Table>
       <TableHeader>
@@ -55,17 +73,19 @@ function CartWithItems({products}: CartWithItemsProps) {
       </TableHeader>
       <TableBody>
         {products.map((product) => (
-          <TableRow key={product.id}>
+          <TableRow key={product._id}>
             <TableCell className="font-medium">{product.title}</TableCell>
             <TableCell>{product.quantity}</TableCell>
-            <TableCell className="text-right">{product.price}</TableCell>
+            <TableCell className="text-right">
+              {toCurrency(product.price)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{totalPrice}</TableCell>
+          <TableCell className="text-right">{toCurrency(totalPrice)}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

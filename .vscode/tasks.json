@@ -6,8 +6,17 @@
             "script": "dev",
             "path": "client",
             "problemMatcher": [],
-            "label": "npm: dev - client",
+            "label": "start frontend server",
             "detail": "vite",
+            "runOptions": {"runOn": "folderOpen"}
+        },
+        {
+            "type": "npm",
+            "script": "start-watch",
+            "path": "server",
+            "problemMatcher": [],
+            "label": "start backend server",
+            "detail": "nodemon",
             "runOptions": {"runOn": "folderOpen"}
         }
     ]
