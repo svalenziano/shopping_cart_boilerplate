@@ -22,6 +22,14 @@ function Logo() {
 
 export function App() {
   const [products, setProducts] = useState<APIProduct[]>([])
+  const [cart, setCart] = useState<APIProduct[]>([])
+
+  useEffect(() => {
+    async function getCart() {
+      setCart(await services.getCart())
+    }
+    getCart()
+  }, [])
 
   useEffect(() => {
     async function getProducts() {
@@ -72,7 +80,7 @@ export function App() {
     <div className="flex min-h-svh p-6">
       <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
         <Logo />
-        <Cart products={products.slice(2, 5)} />
+        <Cart products={cart} />
         <ProductList products={products} onSubmit={handleAddEditProduct} onDelete={handleDelete} />
       </div>
     </div>

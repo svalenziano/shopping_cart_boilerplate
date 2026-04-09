@@ -39,11 +39,18 @@ async function deleteProduct(product: partialAPIProduct): Promise<boolean> {
     method: "DELETE",
   })
   checkResponse(response, "Failed to delete product")
+  return true
+}
+
+async function getCart(): Promise<APIProduct[]> {
+  const response = await fetch("/api/cart")
+  checkResponse(response, "Failed to retrieve cart")
+  return apiProductListSchema.parse(await response.json())
 }
 
 function checkResponse(response: Response, errorMessage: string) {
   if (!response.ok) {
-    throw new Error(errorMessage)
+    throw new Error("API Error: " + errorMessage)
   }
 }
 
@@ -52,4 +59,5 @@ export default {
   createProduct,
   updateProduct,
   deleteProduct,
+  getCart,
 }
