@@ -1,6 +1,6 @@
 import EditableProduct from "@/features/EditableProduct"
 import type { APIProduct, Product } from "@/types"
-import { ToggleableAddEditProductForm } from "./AddProductForm"
+import { ToggleableAddEditProductForm } from "./AddEditProductForm"
 import type {
   FormEventHandler,
   MouseEventHandler,
@@ -19,7 +19,12 @@ const placeholder: MouseEventHandler = (ev) => {
   console.log("doing stuff!")
 }
 
-function ProductList({ products, onSubmit, onDelete, onAddToCart }: ProductListProps) {
+function ProductList({
+  products,
+  onSubmit,
+  onDelete,
+  onAddToCart,
+}: ProductListProps) {
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>

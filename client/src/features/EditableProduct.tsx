@@ -6,7 +6,7 @@ import {
   type MouseEventHandler,
   type SubmitEventHandler,
 } from "react"
-import { AddEditProductForm } from "./AddProductForm"
+import { AddEditProductForm } from "./AddEditProductForm"
 
 interface ProductProps {
   product: APIProduct
