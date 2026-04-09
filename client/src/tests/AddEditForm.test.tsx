@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react"
+
 import { AddEditProductForm } from "@/features/AddProductForm"
 import userEvent from "@testing-library/user-event";
 
@@ -14,7 +15,7 @@ const MOCK_PRODUCT = {
 }
 
 /**
- * No product is provided
+ ADD -> No product is provided
  */
 function AddProductForm() {
   return (
@@ -27,7 +28,7 @@ function AddProductForm() {
 }
 
 /**
- * A product is provided
+ EDIT -> A product is provided
  */
 function EditProductForm() {
   return (
@@ -77,9 +78,27 @@ test("Edit Form (variant) structure is as expected.", () => {
   expect(screen.queryByRole('textbox', {name: /id/i})).toBeInTheDocument()
 })
 
+test("Edit form is pre-loaded with current values", async () => {
+  render(EditProductForm())
+  expect(screen.getByRole("textbox", {name: /id/i})).toHaveValue(MOCK_PRODUCT._id)  
+  expect(screen.getByRole('textbox', {name: /product name/i})).toHaveValue(MOCK_PRODUCT.title)
+  expect(screen.getByRole('textbox', {name: /price/i})).toHaveValue(String(MOCK_PRODUCT.price))
+  expect(screen.getByRole('textbox', {name: /quantity/i})).toHaveValue(String(MOCK_PRODUCT.quantity))
+})
 
+test("Edit form - pre-loaded values can be replaced with new value", async () => {
+  render(EditProductForm())
+  const user = userEvent.setup()
 
-test("Edit form - 'id' input is NOT editable", () => {
-  render(AddProductForm())
-  
+  for (let name of [/product name/i, /price/i, /quantity/i]) {
+    const input = screen.getByRole('textbox', {name})
+    await user.clear(input)
+    await user.type(input, "Lorem ipsum")
+    expect(input).toHaveValue("Lorem ipsum")
+  }
+})
+
+test("Editform: id field is NOT editable", () => {
+  render(EditProductForm())
+  expect(screen.getByRole('textbox', {name: /id/i})).toHaveAttribute('readonly')
 })
