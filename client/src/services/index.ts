@@ -1,9 +1,10 @@
 import { apiProductListSchema, apiProductSchema, type APIProduct, type partialAPIProduct } from "@/types"
+import { toast } from "sonner"
 import z from "zod"
 
 async function getProducts(): Promise<APIProduct[]> {
   const response = await fetch("/api/products")
-  checkResponse(response, "Failed to fetch products")
+  checkResponseStatus(response, "Failed to fetch products")
   const data = z.parse(apiProductListSchema, await response.json())
   return data
 }
@@ -16,7 +17,7 @@ async function createProduct(product: partialAPIProduct): Promise<APIProduct> {
       "Content-Type": "application/json",
     }
   })
-  checkResponse(response, "Failed to create product")
+  checkResponseStatus(response, "Failed to create product")
   return apiProductSchema.parse(await response.json())
 }
 
@@ -29,7 +30,7 @@ async function updateProduct(product: partialAPIProduct): Promise<APIProduct> {
       "Content-Type": "application/json",
     }
   })
-  checkResponse(response, "Failed to update product")
+  checkResponseStatus(response, "Failed to update product")
   return apiProductSchema.parse(await response.json())
 }
 
@@ -38,13 +39,13 @@ async function deleteProduct(product: partialAPIProduct): Promise<boolean> {
   const response = await fetch(`/api/products/${product._id}`, {
     method: "DELETE",
   })
-  checkResponse(response, "Failed to delete product")
+  checkResponseStatus(response, "Failed to delete product")
   return true
 }
 
 async function getCart(): Promise<APIProduct[]> {
   const response = await fetch("/api/cart")
-  checkResponse(response, "Failed to retrieve cart")
+  checkResponseStatus(response, "Failed to retrieve cart")
   return apiProductListSchema.parse(await response.json())
 }
 
@@ -63,14 +64,21 @@ async function addToCart(product_id: string): Promise<AddToCartReponse> {
       "Content-Type": "application/json",
     }
   })
-  checkResponse(response, "Failed to add to cart")
+  checkResponseStatus(response, "Failed to add to cart")
   const weird_data = await response.json() as AddToCartReponse
   return weird_data
 }
 
-function checkResponse(response: Response, errorMessage: string) {
+async function checkout(): Promise<void> {
+  const response = await fetch("/api/checkout", {
+    method: "POST",
+  })
+  checkResponseStatus(response, "Checkout failed")
+}
+
+function checkResponseStatus(response: Response, errorMessage: string) {
   if (!response.ok) {
-    throw new Error("API Error: " + errorMessage)
+    throw new Error("API Reponse was not OK: " + errorMessage)
   }
 }
 
@@ -81,4 +89,5 @@ export default {
   deleteProduct,
   getCart,
   addToCart,
+  checkout
 }

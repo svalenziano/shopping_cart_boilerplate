@@ -101,18 +101,31 @@ export function App() {
       } else {
         setCart([...cart, results.item])
       }
-      toast.info(`${results.item.title} added to cart.`)
+      toast.success(`${results.item.title} added to cart.`)
 
     } catch (e) {
+      toast.error("Could not add to cart ☹️, please try again")
       console.error(e)
+    }
+  }
+
+  const handleCheckout: MouseEventHandler = async (ev) => {
+    ev.preventDefault()
+    try {
+      await services.checkout()
+      setCart([])
+      toast.success("Checkout success! 👍")
+    } catch (e) {
+      console.error(e)
+      toast.error("Checkout failed ☹️")
     }
   }
 
   return (
     <div className="flex min-h-svh p-6">
-      <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
+      <div className="flex max-w-3xl min-w-md flex-col gap-4 text-sm leading-loose">
         <Logo />
-        <Cart products={cart} />
+        <Cart products={cart} onCheckout={handleCheckout} />
         <ProductList
           products={products}
           onSubmit={handleAddEditProduct}
