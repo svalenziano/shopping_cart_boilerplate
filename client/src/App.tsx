@@ -3,7 +3,8 @@ import Cart from "./features/Cart"
 import ProductList from "./features/ProductList"
 import { useEffect, useState, type SubmitEventHandler } from "react"
 import services from "./services"
-import type { APIProduct } from "./types"
+import { apiProductSchema, partialAPIProductSchema, type APIProduct } from "./types"
+import z from "zod"
 
 
 function Logo() {
@@ -25,22 +26,25 @@ export function App() {
     getProducts()
   }, [])
 
-  const handleAddProduct: SubmitEventHandler = (ev) => {
+  const handleAddProduct: SubmitEventHandler = async (ev) => {
     const form = ev.target // TODO - REMOVE ASSERTION
 
     const formdata = Object.fromEntries(new FormData(form))
-
+    const product = z.parse(partialAPIProductSchema, formdata)
     // console.log("NEW/EDITED PRODUCT!")
     // console.log(formdata)
     // console.log("Adding product to inventory:")
     // console.log(product)
-    if ("_id" in formdata) {
+    if ("_id" in product) {
       console.log(`Editing product:`)
-      console.log(formdata)
+      console.log(product)
     } else {
       console.log(`Adding product:`)
-      console.log(formdata)
+      console.log(product)
+      const createdProduct = await services.createProduct(product)
+      setProducts([...products, createdProduct])
     }
+
   }
 
   return (
