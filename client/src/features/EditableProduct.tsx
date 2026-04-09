@@ -1,18 +1,24 @@
 import { Button } from "@/components/ui/button"
 import type { APIProduct } from "@/types/index"
 import type React from "react"
-import { useState, type SubmitEventHandler } from "react"
-import { AddProductForm } from "./AddProductForm"
+import {
+  useState,
+  type MouseEventHandler,
+  type SubmitEventHandler,
+} from "react"
+import { AddEditProductForm } from "./AddProductForm"
 
 interface ProductProps {
-  product: APIProduct;
-  addToCartButton: React.MouseEventHandler;
-  onSubmit: SubmitEventHandler;
+  product: APIProduct
+  addToCartButton: React.MouseEventHandler
+  onSubmit: SubmitEventHandler
+  onDelete: MouseEventHandler
 }
 
 function EditableProduct({
   product,
   onSubmit,
+  onDelete,
   addToCartButton,
 }: ProductProps) {
   const [editing, setEditing] = useState(false)
@@ -33,10 +39,11 @@ function EditableProduct({
         Edit
       </Button>
       {editing ? (
-        <AddProductForm
+        <AddEditProductForm
           product={product}
           onSubmit={onSubmitWrapper}
           cancelButton={() => setEditing(false)}
+          onDelete={onDelete}
         />
       ) : null}
     </div>

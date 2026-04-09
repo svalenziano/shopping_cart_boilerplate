@@ -33,6 +33,14 @@ async function updateProduct(product: partialAPIProduct): Promise<APIProduct> {
   return apiProductSchema.parse(await response.json())
 }
 
+async function deleteProduct(product: partialAPIProduct): Promise<boolean> {
+  if (!("_id" in product)) throw new Error("product is missing _id")
+  const response = await fetch(`/api/products/${product._id}`, {
+    method: "DELETE",
+  })
+  checkResponse(response, "Failed to delete product")
+}
+
 function checkResponse(response: Response, errorMessage: string) {
   if (!response.ok) {
     throw new Error(errorMessage)
@@ -43,4 +51,5 @@ export default {
   getProducts,
   createProduct,
   updateProduct,
+  deleteProduct,
 }

@@ -1,11 +1,15 @@
 import { Flower } from "lucide-react"
 import Cart from "./features/Cart"
 import ProductList from "./features/ProductList"
-import { useEffect, useState, type SubmitEventHandler } from "react"
+import { useEffect, useState, type MouseEventHandler, type SubmitEventHandler } from "react"
 import services from "./services"
-import { apiProductSchema, partialAPIProductSchema, type APIProduct } from "./types"
+import {
+  apiProductSchema,
+  partialAPIProductSchema,
+  type APIProduct,
+} from "./types"
 import z from "zod"
-
+import { toast } from "sonner"
 
 function Logo() {
   return (
@@ -26,29 +30,41 @@ export function App() {
     getProducts()
   }, [])
 
-  const handleAddProduct: SubmitEventHandler = async (ev) => {
-    const form = ev.target // TODO - REMOVE ASSERTION
-
+  const handleAddEditProduct: SubmitEventHandler = async (ev) => {
+    const form = ev.target
     const formdata = Object.fromEntries(new FormData(form))
     const product = z.parse(partialAPIProductSchema, formdata)
-    // console.log("NEW/EDITED PRODUCT!")
-    // console.log(formdata)
-    // console.log("Adding product to inventory:")
-    // console.log(product)
 
     if ("_id" in product) {
-      console.log(`Editing product:`)
-      console.log(product)
       const updatedProduct = await services.updateProduct(product)
-      setProducts(products.map((oldProduct) => {
-        if (oldProduct._id === updatedProduct._id) return updatedProduct
-        else return oldProduct
-      }))
+      setProducts(
+        products.map((oldProduct) => {
+          if (oldProduct._id === updatedProduct._id) return updatedProduct
+          else return oldProduct
+        })
+      )
+      toast.info(`"${updatedProduct.title}" was edited`)
     } else {
-      console.log(`Adding product:`)
-      console.log(product)
       const newProduct = await services.createProduct(product)
       setProducts([...products, newProduct])
+      toast.info(`"${newProduct.title}" was added`)
+    }
+  }
+
+  const handleDelete: MouseEventHandler = async (ev) => {
+    ev.preventDefault()
+    const form = (ev.target as HTMLElement).closest('form')!
+    const formdata = Object.fromEntries(new FormData(form))
+    const productToDelete = z.parse(partialAPIProductSchema, formdata)
+
+    try {
+      services.deleteProduct(productToDelete)
+      setProducts(products.filter((exstProduct) => {
+        return !(exstProduct._id === productToDelete._id)
+      }))
+      toast.info(`"${productToDelete.title}" was deleted`)
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -57,7 +73,7 @@ export function App() {
       <div className="flex max-w-3xl min-w-sm flex-col gap-4 text-sm leading-loose">
         <Logo />
         <Cart products={products.slice(2, 5)} />
-        <ProductList products={products} onSubmit={handleAddProduct} />
+        <ProductList products={products} onSubmit={handleAddEditProduct} onDelete={handleDelete} />
       </div>
     </div>
   )

@@ -28,10 +28,12 @@ import { type APIProduct } from "@/types"
 
 type ToggleableAddProductFormProps = {
   onSubmit: SubmitEventHandler
+  onDelete: MouseEventHandler
 }
 
-export function ToggleableAddProductForm({
+export function ToggleableAddEditProductForm({
   onSubmit,
+  onDelete,
 }: ToggleableAddProductFormProps) {
   const [visible, setVisible] = useState(false)
 
@@ -41,7 +43,13 @@ export function ToggleableAddProductForm({
   }
 
   if (visible) {
-    return <AddProductForm cancelButton={toggleForm} onSubmit={onSubmit} />
+    return (
+      <AddEditProductForm
+        cancelButton={toggleForm}
+        onSubmit={onSubmit}
+        onDelete={onDelete}
+      />
+    )
   }
   return <Button onClick={toggleForm}>Add A Product</Button>
 }
@@ -50,6 +58,7 @@ type AddProductFormProps = {
   product?: APIProduct
   cancelButton: MouseEventHandler
   onSubmit: SubmitEventHandler
+  onDelete: MouseEventHandler
 }
 
 /**
@@ -57,16 +66,24 @@ type AddProductFormProps = {
     it's best to keep keep button separate from this 
     component so that the form is more reusable
  */
-export function AddProductForm({
+export function AddEditProductForm({
   product,
   cancelButton,
   onSubmit,
+  onDelete,
 }: AddProductFormProps) {
-
   const handleSubmit: SubmitEventHandler = (ev) => {
     ev.preventDefault()
-    onSubmit(ev) 
+    onSubmit(ev)
   }
+
+  const deleteButton = (        
+    <div>
+      <Button variant="destructive" onClick={onDelete}>
+        Delete
+      </Button>
+    </div>
+  )
 
   return (
     <form className="m-4 rounded-md border-2 p-2" onSubmit={handleSubmit}>
@@ -101,13 +118,17 @@ export function AddProductForm({
         placeholder="42"
         defaultValue={product && product.quantity}
       />
-
-      <Button variant="confirm" type="submit">
-        {product ? "Edit" : "Add"}
-      </Button>
-      <Button variant="secondary" onClick={cancelButton}>
-        Cancel
-      </Button>
+      <div className="flex justify-between">
+        <div>
+          <Button variant="confirm" type="submit">
+            {product ? "Edit" : "Add"}
+          </Button>
+          <Button variant="secondary" onClick={cancelButton}>
+            Cancel
+          </Button>
+        </div>
+        {product && deleteButton}
+      </div>
     </form>
   )
 }

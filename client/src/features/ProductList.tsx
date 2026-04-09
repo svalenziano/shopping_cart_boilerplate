@@ -1,13 +1,16 @@
 import EditableProduct from "@/features/EditableProduct"
 import type { APIProduct, Product } from "@/types"
-import { ToggleableAddProductForm } from "./AddProductForm"
-import type { FormEventHandler, MouseEventHandler, SubmitEventHandler } from "react"
-
-
+import { ToggleableAddEditProductForm } from "./AddProductForm"
+import type {
+  FormEventHandler,
+  MouseEventHandler,
+  SubmitEventHandler,
+} from "react"
 
 interface ProductListProps {
   products: APIProduct[]
   onSubmit: SubmitEventHandler
+  onDelete: MouseEventHandler
 }
 
 const placeholder: MouseEventHandler = (ev) => {
@@ -15,7 +18,7 @@ const placeholder: MouseEventHandler = (ev) => {
   console.log("doing stuff!")
 }
 
-function ProductList({ products, onSubmit }: ProductListProps) {
+function ProductList({ products, onSubmit, onDelete }: ProductListProps) {
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>
@@ -27,11 +30,12 @@ function ProductList({ products, onSubmit }: ProductListProps) {
               product={prod}
               addToCartButton={placeholder}
               onSubmit={onSubmit}
+              onDelete={onDelete}
             />
           )
         })}
       </ul>
-      <ToggleableAddProductForm onSubmit={onSubmit} />
+      <ToggleableAddEditProductForm onSubmit={onSubmit} onDelete={onDelete} />
     </div>
   )
 }
