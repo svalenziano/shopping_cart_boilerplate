@@ -93,7 +93,7 @@ export function App() {
       }))
 
       setCart(cart.map((oldCartItem) => {
-        if (oldCartItem._id === product._id) return results.item
+        if (oldCartItem._id === results.item._id) return results.item
         else return oldCartItem
       }))
 
