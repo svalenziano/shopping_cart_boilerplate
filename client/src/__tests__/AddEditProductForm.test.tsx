@@ -69,7 +69,7 @@ test("Add form is editable", async () => {
     expect(input).toHaveValue("Lorem ipsum")
   }
 })
-// each of the fields is editable
+// each of the fields is editable 
 
 test("Edit Form (variant) structure is as expected.", () => {
   render(EditProductForm())

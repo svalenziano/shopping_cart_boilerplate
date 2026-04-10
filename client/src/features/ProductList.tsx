@@ -1,6 +1,6 @@
 import EditableProduct from "@/features/EditableProduct"
 import type { APIProduct, Product } from "@/types"
-import { ToggleableAddEditProductForm } from "./AddEditProductForm"
+import { ToggleableAddProductForm } from "./AddEditProductForm"
 import type {
   FormEventHandler,
   MouseEventHandler,
@@ -28,7 +28,7 @@ function ProductList({
   return (
     <div className="w-full max-w-3xl min-w-md">
       <h2>Products</h2>
-      <ul className="w-full grid grid-cols-2 grid-flow-row gap-0">
+      <ul className="grid w-full grid-flow-row grid-cols-2 gap-0">
         {products.map((prod) => {
           return (
             <EditableProduct
@@ -41,7 +41,7 @@ function ProductList({
           )
         })}
       </ul>
-      <ToggleableAddEditProductForm onSubmit={onSubmit} onDelete={onDelete} />
+      <ToggleableAddProductForm onSubmit={onSubmit} onDelete={onDelete} />
     </div>
   )
 }

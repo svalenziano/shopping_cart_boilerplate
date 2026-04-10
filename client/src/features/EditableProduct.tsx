@@ -35,7 +35,7 @@ function EditableProduct({
   }
 
   return (
-    <div className="m-4 rounded-md border-2 p-2 m-0">
+    <div className="m-2 rounded-md border-2 p-2">
       <h3>{product.title}</h3>
       <p>${`${product.price}`}</p>
       <p>{`${product.quantity} left in stock`}</p>

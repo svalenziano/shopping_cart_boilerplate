@@ -31,7 +31,10 @@ type ToggleableAddProductFormProps = {
   onDelete: MouseEventHandler
 }
 
-export function ToggleableAddEditProductForm({
+/**
+ * This wrapper is only for *ADDING* products and not for *EDITING*
+ */
+export function ToggleableAddProductForm({
   onSubmit,
   onDelete,
 }: ToggleableAddProductFormProps) {
@@ -54,7 +57,7 @@ export function ToggleableAddEditProductForm({
   return <Button onClick={toggleForm}>Add A Product</Button>
 }
 
-type AddProductFormProps = {
+type AddEditProductFormProps = {
   product?: APIProduct
   cancelButton: MouseEventHandler
   onSubmit: SubmitEventHandler
@@ -71,7 +74,7 @@ export function AddEditProductForm({
   cancelButton,
   onSubmit,
   onDelete,
-}: AddProductFormProps) {
+}: AddEditProductFormProps) {
   const handleSubmit: SubmitEventHandler = (ev) => {
     ev.preventDefault()
     onSubmit(ev)
