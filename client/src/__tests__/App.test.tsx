@@ -70,7 +70,7 @@ test("Empty shopping cart has placeholder text, button is disabled", async () =>
   ).toBeDisabled()
 })
 
-test("Add product adds product to UI", async () => {
+async function addProduct() {
   const user = userEvent.setup()
   const productToAdd = {
     _id: "69d6c252ac3984a29e4e2ab8",
@@ -106,11 +106,22 @@ test("Add product adds product to UI", async () => {
   )
 
   await user.click(screen.getByRole("button", { name: /add/i }))
+  
+  return {
+    user,
+    productToAdd,
+  }
+}
+
+test("Add product adds product to UI", async () => {
+  const {productToAdd} = await addProduct()  
 
   expect(await screen.findByText(productToAdd.title)).toBeInTheDocument()
   expect(await screen.findByText(/\$.*123.*/)).toBeInTheDocument()
 })
 
-test("Add Product Form disappears after product is added", () => {
+test("Add Product Form disappears after product is added", async () => {
+  // const {user, productToAdd} = await addProduct()  
   
+  expect(screen.queryByRole("button", {name: "Add"})).not.toBeInTheDocument()
 })
