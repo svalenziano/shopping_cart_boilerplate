@@ -11,7 +11,7 @@ const ToggleableAddProductForm = ({
 }: ToggleableAddProductFormProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const handleToggleForm = () => {
-    setIsVisible(!isVisible);
+    setIsVisible(prev => !prev);
   };
   return (
     <>
