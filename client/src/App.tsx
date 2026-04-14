@@ -3,18 +3,19 @@ import Cart from "./features/Cart"
 import ProductList from "./features/ProductList"
 import {
   useEffect,
+  useReducer,
   useState,
   type MouseEventHandler,
   type SubmitEventHandler,
 } from "react"
 import services from "./services"
 import {
-  apiProductSchema,
   partialAPIProductSchema,
   type APIProduct,
 } from "./types"
 import z from "zod"
 import { toast } from "sonner"
+import { productReducer } from "./features/productReducer"
 
 function Logo() {
   return (
@@ -26,7 +27,7 @@ function Logo() {
 }
 
 export function App() {
-  const [products, setProducts] = useState<APIProduct[]>([])
+  const [products, dispatchProducts] = useReducer(productReducer, [])
   const [cart, setCart] = useState<APIProduct[]>([])
 
   useEffect(() => {
@@ -38,7 +39,10 @@ export function App() {
 
   useEffect(() => {
     async function getProducts() {
-      setProducts(await services.getProducts())
+      dispatchProducts({
+        type: "set",
+        payload: await services.getProducts(),
+      })
     }
     getProducts()
   }, [])
@@ -50,16 +54,14 @@ export function App() {
 
     if ("_id" in product) {
       const updatedProduct = await services.updateProduct(product)
-      setProducts(
-        products.map((oldProduct) => {
-          if (oldProduct._id === updatedProduct._id) return updatedProduct
-          else return oldProduct
-        })
-      )
+      dispatchProducts({
+        type: "update",
+        payload: updatedProduct,
+      })
       toast.info(`"${updatedProduct.title}" was edited`)
     } else {
       const newProduct = await services.createProduct(product)
-      setProducts([...products, newProduct])
+      dispatchProducts({ type: "new", payload: newProduct })
       toast.info(`"${newProduct.title}" was added`)
     }
   }
@@ -69,14 +71,14 @@ export function App() {
     const form = (ev.target as HTMLElement).closest("form")!
     const formdata = Object.fromEntries(new FormData(form))
     const productToDelete = z.parse(partialAPIProductSchema, formdata)
+    if (!productToDelete._id)
+      throw new Error(
+        `_id is required for deletion ${JSON.stringify(productToDelete)}`
+      )
 
     try {
       services.deleteProduct(productToDelete)
-      setProducts(
-        products.filter((exstProduct) => {
-          return !(exstProduct._id === productToDelete._id)
-        })
-      )
+      dispatchProducts({ type: "delete", payload: { id: productToDelete._id } })
       toast.info(`"${productToDelete.title}" was deleted`)
     } catch (e) {
       console.error(e)
@@ -87,22 +89,22 @@ export function App() {
     try {
       const results = await services.addToCart(product._id)
 
-      setProducts(products.map((oldProduct) => {
-        if (oldProduct._id === product._id) return results.product
-        else return oldProduct
-      }))
+      dispatchProducts({type: "new", payload: results.item})
 
-      const existsInCart = !!cart.find((product) => product._id === results.item._id)
+      const existsInCart = !!cart.find(
+        (product) => product._id === results.item._id
+      )
       if (existsInCart) {
-        setCart(cart.map((oldCartItem) => {
-          if (oldCartItem._id === results.item._id) return results.item
-          else return oldCartItem
-        }))
+        setCart(
+          cart.map((oldCartItem) => {
+            if (oldCartItem._id === results.item._id) return results.item
+            else return oldCartItem
+          })
+        )
       } else {
         setCart([...cart, results.item])
       }
       toast.success(`${results.item.title} added to cart.`)
-
     } catch (e) {
       toast.error("Could not add to cart ☹️, please try again")
       console.error(e)
