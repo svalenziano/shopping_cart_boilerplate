@@ -1,3 +1,4 @@
+import { H2 } from "@/components/Typography"
 import EditableProduct from "@/features/EditableProduct"
 import type { APIProduct, Product } from "@/types"
 import { ToggleableAddProductForm } from "./AddEditProductForm"
@@ -27,7 +28,7 @@ function ProductList({
 }: ProductListProps) {
   return (
     <div className="w-full max-w-3xl min-w-md">
-      <h2>Products</h2>
+      <H2>Products</H2>
       <ul className="grid w-full grid-flow-row grid-cols-2 gap-0">
         {products.map((prod) => {
           return (
