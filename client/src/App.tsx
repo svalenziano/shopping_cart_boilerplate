@@ -15,7 +15,8 @@ import {
 } from "./types"
 import z from "zod"
 import { toast } from "sonner"
-import { productReducer } from "./features/productReducer"
+import { productReducer } from "./reducers/productReducer"
+import { cartReducer } from "./reducers/cartReducer"
 
 function Logo() {
   return (
@@ -28,11 +29,14 @@ function Logo() {
 
 export function App() {
   const [products, dispatchProducts] = useReducer(productReducer, [])
-  const [cart, setCart] = useState<APIProduct[]>([])
+  const [cart, dispatchCart] = useReducer(cartReducer, [])
 
   useEffect(() => {
     async function getCart() {
-      setCart(await services.getCart())
+      dispatchCart({
+        type: 'set',
+        payload: await services.getCart()
+      })
     }
     getCart()
   }, [])
@@ -89,20 +93,18 @@ export function App() {
     try {
       const results = await services.addToCart(product._id)
 
-      dispatchProducts({type: "new", payload: results.item})
+      dispatchProducts({type: "update", payload: results.product})
 
       const existsInCart = !!cart.find(
         (product) => product._id === results.item._id
       )
       if (existsInCart) {
-        setCart(
-          cart.map((oldCartItem) => {
-            if (oldCartItem._id === results.item._id) return results.item
-            else return oldCartItem
-          })
-        )
+        dispatchCart({type: 'update', payload: results.item})
       } else {
-        setCart([...cart, results.item])
+        dispatchCart({
+          type: 'add',
+          payload: results.item,
+        })
       }
       toast.success(`${results.item.title} added to cart.`)
     } catch (e) {
@@ -115,7 +117,7 @@ export function App() {
     ev.preventDefault()
     try {
       await services.checkout()
-      setCart([])
+      dispatchCart({type: 'delete'})
       toast.success("Checkout success! 👍")
     } catch (e) {
       console.error(e)
